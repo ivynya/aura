@@ -25,7 +25,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@ivynya/leaf": "^0.0.3",
+		"@ivynya/leaf": "^0.0.4",
+		"marked": "^11.1.0",
 		"sass": "^1.69.5"
 	}
 }

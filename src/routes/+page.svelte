@@ -2,10 +2,10 @@
 	import { send } from "$lib/chat";
 	import Message from "./Message.svelte";
 	import ModelSelect from "./ModelSelect.svelte";
-	import type { ChatMessage } from "$lib/schema";
 	import { onMount } from "svelte";
 	import { getModels } from "$lib/model";
 	import MessageInput from "./MessageInput.svelte";
+	import type { ChatMessage } from "$lib/schema";
 
   let context: any[] | undefined = undefined;
   let models = ["mistral"];
@@ -61,8 +61,13 @@
   div {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
     flex: 1 1;
-    padding: 1rem 0;
+    margin: 2rem 0;
+    margin-left: -0.45rem;
+    padding: 0.5rem;
+    padding-right: 1rem;
+    max-height: calc(100vh - 140px - 5rem);
+    overflow-y: auto;
   }
 </style>

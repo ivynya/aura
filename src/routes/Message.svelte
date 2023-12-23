@@ -1,43 +1,56 @@
 <script lang="ts">
+  import { marked } from "marked";
 	import type { ChatMessage } from "$lib/schema";
 
   export let message: ChatMessage;
   export let count: number;
+
+  $: duration = (message.duration_total || 0) / 1000;
+  $: tokens = message.tokens || 0;
 </script>
 
-<div class:user={message.user === "user"}>
+<div class="msg" class:user={message.user === "user"}>
   <h4>
     <span>{count}</span>
     {message.user}
     <span class="spacer" />
     {#if message.done}
-      <span>{message.tokens} tokens</span>
-      <span>{Math.round(message.duration_total || 0) / 1000} seconds</span>
+      <span>{(tokens / duration).toFixed(1)} tk/s</span>
+      <span>{tokens}tk</span>
+      <span>{duration.toFixed(1)}s</span>
     {/if}
   </h4>
-  <p>{message.text}</p>
+  <div>{@html marked.parse(message.text)}</div>
 </div>
 
 <style lang="scss">
-  div.user {
-    filter: grayscale(1);
+  .msg {
+    background: var(--background);
+    border: 1px solid;
+    border-color:
+      var(--border-primary)
+      var(--border-secondary)
+      var(--border-secondary)
+      var(--border-primary);
+    border-radius: var(--border-radius-sm);
+    box-shadow:
+      var(--nm-shadow-sm-primary),
+      var(--nm-shadow-sm-secondary);
+    transition-duration: 0.5s;
+    box-shadow: var(--nm-shadow-sm-secondary);
+    padding: 1rem;
+  }
 
-    h4 {
-      color: var(--text-muted);
-    }
-
-    p {
-      color: var(--text-muted);
-    }
+  .msg.user {
+    color: var(--text-muted);
+    filter: grayscale(0.5);
   }
 
   h4 {
-    border-top: dotted 3px var(--background-darker);
     display: flex;
     align-items: center;
     margin: 0;
-    padding-top: 0.5rem;
-    padding-bottom: 0.25rem;
+    margin-bottom: 0.75rem;
     gap: 0.5rem;
 
     span {
@@ -59,11 +72,32 @@
     }
   }
 
-  p {
+  .msg div {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .msg :global(p) {
     margin: 0;
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
     color: var(--text-primary);
+    white-space: pre-wrap;
+  }
+  
+  .msg :global(pre) {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    background-color: var(--background-darker);
+    border-radius: var(--border-radius-sm);
+    padding: 0.5rem 1rem;
+    overflow-x: auto;
+    font-family: cartograph-cf, monospace;
   }
 </style>

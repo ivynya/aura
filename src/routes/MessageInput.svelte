@@ -18,7 +18,7 @@
     font-family: var(--font-family);
     font-weight: 400;
     line-height: 1.5;
-    padding: 0.75rem;
+    padding: 1rem;
     background-color: var(--background);
 		border-radius: var(--border-radius-sm);
 		box-shadow:
@@ -26,6 +26,10 @@
 			var(--nm-shadow-sm-secondary) inset;
     transition-duration: 0.5s;
     display: block;
-    height: 35px;
+    height: 40px;
+
+    &::placeholder {
+      color: var(--text-muted);
+    }
   }
 </style>
