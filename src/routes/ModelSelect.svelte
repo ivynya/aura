@@ -69,17 +69,22 @@
 		.options {
 			display: flex;
 			align-items: center;
+			height: 100%;
 		}
 		.options button {
 			background-color: transparent;
 			border: none;
 			color: var(--text-color);
 			cursor: pointer;
+			display: grid;
+			place-items: center;
 			flex: 1 1;
 
 			padding: auto 0;
 			margin: auto 0;
+			min-height: 100%;
 
+			line-height: 1;
 			font-family: inherit;
 			font-size: 0.65rem;
 			letter-spacing: 1px;
