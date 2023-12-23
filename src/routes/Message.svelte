@@ -21,7 +21,11 @@
       <span>{duration.toFixed(1)}s</span>
     {/if}
   </h4>
-  <div>{@html marked.parse(message.text)}</div>
+  {#if message.text.length === 0}
+    <div class="loading">parsing context...</div>
+  {:else}
+    <div>{@html marked.parse(message.text)}</div>
+  {/if}
 </div>
 
 <style lang="scss">
@@ -70,6 +74,23 @@
 
     span.spacer {
       flex-grow: 1;
+    }
+  }
+
+  .loading {
+    animation: flash 1s infinite;
+    color: var(--text-muted);
+
+    @keyframes flash {
+      0% {
+        opacity: 0.5;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0.5;
+      }
     }
   }
 
