@@ -1,0 +1,22 @@
+{
+  "name": "Aura • Ivy Direct",
+  "short_name": "Aura",
+  "start_url": "/aura",
+  "icons": [
+    {
+      "src": "./aura-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./aura-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#2B3A52",
+  "background_color": "#2B3A52",
+  "display": "fullscreen",
+  "orientation": "any",
+  "scope": "/aura"
+}
