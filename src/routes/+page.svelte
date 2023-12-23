@@ -1,4 +1,5 @@
 <script lang="ts">
+  import hljs from "highlight.js";
 	import { send } from "$lib/chat";
 	import Message from "./Message.svelte";
 	import ModelSelect from "./ModelSelect.svelte";
@@ -21,10 +22,11 @@
   });
 
   async function submit() {
-    messages = [...messages, { text: prompt, user: "user" }];
-    messages = [...messages, { text: "", user: activeModel }];
-    const body = await send(activeModel, prompt, context);
+    messages = [...messages, { text: prompt, user: "user", count: messages.length }];
+    messages = [...messages, { text: "", user: activeModel, count: messages.length }];
+    const prompt_copy = prompt;
     prompt = "";
+    const body = await send(activeModel, prompt_copy, context);
 
     async function readAllChunks(readableStream: ReadableStream|null) {
       if (!readableStream) return;
@@ -32,6 +34,7 @@
       let done, value;
       while (!done) {
         ({ value, done } = await reader.read());
+        if (done) break;
         const text = new TextDecoder("utf-8").decode(value);
         const json = JSON.parse(text);
         messages[messages.length - 1].text += json.response;
@@ -43,6 +46,7 @@
           messages[messages.length - 1].done = true;
           messages[messages.length - 1].duration_total = json.eval_duration / 1000000;
           messages[messages.length - 1].tokens = json.eval_count;
+          hljs.highlightAll();
         }
       }
     }
@@ -58,8 +62,8 @@
 
 <ModelSelect options={models} bind:selected={activeModel} />
 <div>
-  {#each reversed as message, count}
-    <Message {message} {count} />
+  {#each reversed as message (message.count)}
+    <Message {message} count={message.count} />
   {/each}
 </div>
 <MessageInput bind:input={prompt} on:submit={submit} on:click={reset} />

@@ -26,6 +26,7 @@
 	"type": "module",
 	"dependencies": {
 		"@ivynya/leaf": "^0.0.4",
+		"highlight.js": "^11.9.0",
 		"marked": "^11.1.0",
 		"sass": "^1.69.5"
 	}

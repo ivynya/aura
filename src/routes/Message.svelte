@@ -10,7 +10,7 @@
   $: tokens = message.tokens || 0;
 </script>
 
-<div class="msg" class:user={message.user === "user"} transition:fade={{duration: 200}}>
+<div id="msg-{count}" class="msg" class:user={message.user === "user"} transition:fade={{duration: 200}}>
   <h4>
     <span>{count}</span>
     {message.user}
@@ -76,16 +76,34 @@
   .msg div {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.5rem;
+    line-height: 1.5;
+  }
+
+  .msg :global(a) {
+    color: var(--text-muted);
+    text-decoration: underline;
   }
 
   .msg :global(p) {
     margin: 0;
     font-size: 1rem;
     font-weight: 400;
-    line-height: 1.5;
     color: var(--text-primary);
     white-space: pre-wrap;
+  }
+
+  .msg :global(code) {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    background-color: var(--background-darker);
+    border-radius: var(--border-radius-sm);
+    padding: 0 0.25rem;
+    overflow-x: auto;
+    font-family: cartograph-cf, monospace;
   }
   
   .msg :global(pre) {
