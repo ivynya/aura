@@ -5,10 +5,11 @@
   export let count: number;
 </script>
 
-<div>
+<div class:user={message.user === "user"}>
   <h4>
     <span>{count}</span>
     {message.user}
+    <span class="spacer" />
     {#if message.done}
       <span>{message.tokens} tokens</span>
       <span>{Math.round(message.duration_total || 0) / 1000} seconds</span>
@@ -18,13 +19,26 @@
 </div>
 
 <style lang="scss">
+  div.user {
+    filter: grayscale(1);
+
+    h4 {
+      color: var(--text-muted);
+    }
+
+    p {
+      color: var(--text-muted);
+    }
+  }
+
   h4 {
+    border-top: dotted 3px var(--background-darker);
     display: flex;
     align-items: center;
     margin: 0;
-    margin-bottom: 0.125rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.25rem;
     gap: 0.5rem;
-    width: fit-content;
 
     span {
       font-size: 0.8rem;
@@ -38,6 +52,10 @@
       display: grid;
       place-items: center;
       min-width: 0.5rem;
+    }
+
+    span.spacer {
+      flex-grow: 1;
     }
   }
 
