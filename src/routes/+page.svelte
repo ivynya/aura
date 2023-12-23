@@ -13,6 +13,8 @@
   let prompt: string = "";
   let activeModel: string;
 
+  $: reversed = messages.length > 0 ? messages.toReversed() : [];
+
   onMount(async () => {
     models = (await getModels()).models.map((m) => m.name);
     activeModel = models[0];
@@ -47,20 +49,25 @@
 
     await readAllChunks(body);
   }
+
+  function reset() {
+    messages = [];
+    context = undefined;
+  }
 </script>
 
 <ModelSelect options={models} bind:selected={activeModel} />
 <div>
-  {#each messages as message, count}
+  {#each reversed as message, count}
     <Message {message} {count} />
   {/each}
 </div>
-<MessageInput bind:input={prompt} on:submit={submit} />
+<MessageInput bind:input={prompt} on:submit={submit} on:click={reset} />
 
 <style lang="scss">
   div {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     gap: 1rem;
     flex: 1 1;
     margin: 2rem 0;

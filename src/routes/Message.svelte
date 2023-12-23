@@ -1,5 +1,6 @@
 <script lang="ts">
   import { marked } from "marked";
+  import { fade } from "svelte/transition"; 
 	import type { ChatMessage } from "$lib/schema";
 
   export let message: ChatMessage;
@@ -9,7 +10,7 @@
   $: tokens = message.tokens || 0;
 </script>
 
-<div class="msg" class:user={message.user === "user"}>
+<div class="msg" class:user={message.user === "user"} transition:fade={{duration: 200}}>
   <h4>
     <span>{count}</span>
     {message.user}
