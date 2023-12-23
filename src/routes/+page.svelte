@@ -7,6 +7,7 @@
 	import { getModels } from "$lib/model";
 	import MessageInput from "./MessageInput.svelte";
 
+  let context: any[] | undefined = undefined;
   let models = ["mistral"];
   let messages: ChatMessage[] = [];
   let prompt: string = "";
@@ -20,7 +21,7 @@
   async function submit() {
     messages.push({ text: prompt, user: "user" });
     messages.push({ text: "", user: activeModel });
-    const body = await send(activeModel, prompt);
+    const body = await send(activeModel, prompt, context);
     prompt = "";
 
     async function readAllChunks(readableStream: ReadableStream|null) {
@@ -30,7 +31,14 @@
       while (!done) {
         ({ value, done } = await reader.read());
         const text = new TextDecoder("utf-8").decode(value);
-        messages[messages.length - 1].text += JSON.parse(text).response;
+        const json = JSON.parse(text);
+        messages[messages.length - 1].text += json.response;
+        if (json.done) {
+          context = json.context;
+          messages[messages.length - 1].done = true;
+          messages[messages.length - 1].duration_total = json.total_duration / 1000000;
+          messages[messages.length - 1].tokens = json.eval_count;
+        }
       }
     }
 

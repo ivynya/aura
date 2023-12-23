@@ -6,7 +6,14 @@
 </script>
 
 <div>
-  <h4>{message.user} <span>{count}</span></h4>
+  <h4>
+    <span>{count}</span>
+    {message.user}
+    {#if message.done}
+      <span>{message.tokens} tokens</span>
+      <span>{Math.round(message.duration_total || 0) / 1000} seconds</span>
+    {/if}
+  </h4>
   <p>{message.text}</p>
 </div>
 
@@ -15,15 +22,20 @@
     display: flex;
     align-items: center;
     margin: 0;
+    gap: 0.5rem;
 
     span {
-      font-size: 0.75rem;
-      font-weight: 400;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      padding: 0.125rem 0.5rem;
+    }
+
+    span:first-of-type {
       background-color: var(--background-darker);
       border-radius: var(--border-radius-sm);
-      color: var(--text-muted);
-      margin-left: 0.5rem;
-      padding: 0.125rem 0.5rem;
+      display: grid;
+      place-items: center;
+      min-width: 0.5rem;
     }
   }
 
