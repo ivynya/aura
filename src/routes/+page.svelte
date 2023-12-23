@@ -19,8 +19,8 @@
   });
 
   async function submit() {
-    messages.push({ text: prompt, user: "user" });
-    messages.push({ text: "", user: activeModel });
+    messages = [...messages, { text: prompt, user: "user" }];
+    messages = [...messages, { text: "", user: activeModel }];
     const body = await send(activeModel, prompt, context);
     prompt = "";
 
@@ -35,8 +35,11 @@
         messages[messages.length - 1].text += json.response;
         if (json.done) {
           context = json.context;
+          messages[messages.length - 2].done = true;
+          messages[messages.length - 2].duration_total = json.prompt_eval_duration / 1000000;
+          messages[messages.length - 2].tokens = json.prompt_eval_count;
           messages[messages.length - 1].done = true;
-          messages[messages.length - 1].duration_total = json.total_duration / 1000000;
+          messages[messages.length - 1].duration_total = json.eval_duration / 1000000;
           messages[messages.length - 1].tokens = json.eval_count;
         }
       }

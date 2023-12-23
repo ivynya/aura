@@ -22,12 +22,14 @@
     display: flex;
     align-items: center;
     margin: 0;
+    margin-bottom: 0.125rem;
     gap: 0.5rem;
+    width: fit-content;
 
     span {
       font-size: 0.8rem;
       color: var(--text-muted);
-      padding: 0.125rem 0.5rem;
+      padding: 0 0.25rem;
     }
 
     span:first-of-type {
