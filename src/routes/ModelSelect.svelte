@@ -35,8 +35,7 @@
 			var(--nm-shadow-sm-primary) inset,
 			var(--nm-shadow-sm-secondary) inset;
 		transition-duration: 0.5s;
-		max-height: 25px;
-		height: 100%;
+		height: 20px;
 		padding: 5px;
 		position: relative;
 		z-index: 5;
