@@ -7,6 +7,7 @@
 	import { getModels } from "$lib/model";
 	import MessageInput from "./MessageInput.svelte";
 	import type { ChatMessage } from "$lib/schema";
+	import { state } from "$lib/state";
 
   let context: any[] | undefined = undefined;
   let models = ["mistral"];
@@ -22,6 +23,8 @@
   });
 
   async function submit() {
+    if (prompt.startsWith("/config")) return getConfig(prompt.split(" ").slice(1));
+
     messages = [...messages, { text: prompt, user: "user", count: messages.length }];
     messages = [...messages, { text: "", user: activeModel, count: messages.length }];
     const prompt_copy = prompt;
@@ -57,6 +60,20 @@
   function reset() {
     messages = [];
     context = undefined;
+  }
+
+  function getConfig(args: string[]) {
+    if (args.length > 0) {
+      state.update((s: any) => {
+        if (args.length < 2) return s;
+        const [key, value] = args;
+        s[key] = value;
+        return s;
+      });
+    }
+    const msg = "AURA Configuration:\n";
+    const text = "```\n" + JSON.stringify($state, null, 2) + "\n```";
+    messages = [...messages, { text: msg+text, user: "aura", count: messages.length }];
   }
 </script>
 

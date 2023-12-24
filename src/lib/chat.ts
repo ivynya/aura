@@ -1,6 +1,9 @@
+import { get } from "svelte/store";
+import { state } from "$lib/state";
 
 export async function send(model: string, prompt: string, context?: any[]): Promise<ReadableStream> {
-  const res = await fetch('http://localhost:11434/api/generate', {
+  const { api } = get(state);
+  const res = await fetch(`${api}/api/generate`, {
     method: 'POST',
     body: JSON.stringify({ model, prompt, context }),
   });
