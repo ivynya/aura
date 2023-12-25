@@ -5,9 +5,7 @@
     text: "Authenticate:\n\n```\n/config username <username>\n```\n```\n/config password <password>\n```",
     user: "aura",
     count: 0,
-    done: true,
-    tokens: 0,
-    duration_total: 0,
+    done: true
   };
 </script>
 
