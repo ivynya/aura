@@ -21,5 +21,9 @@
     display: flex;
     flex-direction: column;
     padding: 30px;
+
+    @media (max-width: 768px) {
+      padding: 15px;
+    }
   }
 </style>

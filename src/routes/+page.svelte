@@ -53,7 +53,7 @@
   }
 
   async function submit() {
-    if (prompt.startsWith("/config")) return getConfig(prompt.split(" ").slice(1));
+    if (prompt.startsWith("/config")) return config(prompt.split(" ").slice(1));
 
     messages = [...messages, { text: prompt, user: "user", count: messages.length }];
     messages = [...messages, { text: "", user: activeModel, count: messages.length }];
@@ -67,7 +67,7 @@
     context = undefined;
   }
 
-  function getConfig(args: string[]) {
+  function config(args: string[]) {
     if (args.length > 0) {
       state.update((s: any) => {
         if (args.length < 2) return s;
