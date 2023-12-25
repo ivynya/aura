@@ -18,8 +18,8 @@
     gap: 0.5rem;
     padding: 0.5rem;
     background-color: #2E3440;
-    border-bottom-left-radius: var(--border-radius);
-    border-bottom-right-radius: var(--border-radius);
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
     box-shadow: var(--nm-shadow-sm-primary);
     color: #D8DEE9;
     font-size: 0.75rem;
