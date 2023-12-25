@@ -102,8 +102,11 @@
     margin: 2rem 0;
     margin-left: -0.45rem;
     padding: 0.5rem;
-    padding-right: 1rem;
     max-height: calc(100vh - 140px - 5rem);
     overflow-y: auto;
+
+    @media (min-width: 768px) {
+      padding-right: 1rem;
+    }
   }
 </style>
