@@ -4,11 +4,11 @@
 	let active = 0;
 
 	let btnWidth = 0;
-	$: leftness = 5 + (active * btnWidth);
+	$: leftness = (active * btnWidth);
 </script>
 
 <div class="slider">
-	<span style="transform:translateX({leftness}px);width:{100 / options.length - 1}%;" />
+	<span style="transform:translateX({leftness}px);width:{100 / options.length - 0.5}%;" />
 	<div class="options">
 		{#each options as o, i}
 			<button
@@ -85,7 +85,7 @@
 
 			line-height: 1;
 			font-family: inherit;
-			font-size: 0.65rem;
+			font-size: 0.6rem;
 			letter-spacing: 1px;
 			text-align: center;
 			text-transform: uppercase;

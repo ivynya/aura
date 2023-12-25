@@ -10,7 +10,7 @@
 	import Authenticate from "./Authenticate.svelte";
   
   let context: any[] | undefined = undefined;
-  let models = ["mist", "mist:q2_k", "mist:q4_0", "code"];
+  let models = ["mistral", "mistral:q2_k", "codellama", "codellama:13b"];
   let messages: ChatMessage[] = [];
   let prompt: string = "";
   let activeModel: string;
