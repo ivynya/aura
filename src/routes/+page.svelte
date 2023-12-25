@@ -56,12 +56,13 @@
   }
 
   async function submit() {
-    if (prompt.startsWith("/config")) return config(prompt.split(" ").slice(1));
-
-    messages = [...messages, { text: prompt, user: "user", count: messages.length }];
-    messages = [...messages, { text: "", user: activeModel, count: messages.length }];
     const prompt_copy = prompt;
     prompt = "";
+
+    if (prompt.startsWith("/config")) return config(prompt.split(" ").slice(1));
+
+    messages = [...messages, { text: prompt_copy, user: "user", count: messages.length }];
+    messages = [...messages, { text: "", user: activeModel, count: messages.length }];
     await send(socket, mapModelShort(activeModel), prompt_copy, context);
   }
 
