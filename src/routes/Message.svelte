@@ -15,6 +15,9 @@
     <span>{count}</span>
     {message.user}
     <span class="spacer" />
+    {#if !message.done}
+      <span class="loading">...</span>
+    {/if}
     {#if message.done}
       <span>{(tokens / duration).toFixed(1)} tk/s</span>
       <span>{tokens}tk</span>
