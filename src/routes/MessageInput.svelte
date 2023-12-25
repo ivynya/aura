@@ -35,6 +35,7 @@
     transition-duration: 0.25s;
     width: 40px;
     height: 40px;
+    padding: 0;
     outline: none;
     font-size: 1rem;
     font-family: var(--font-family);
