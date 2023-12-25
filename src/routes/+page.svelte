@@ -59,7 +59,7 @@
     const prompt_copy = prompt;
     prompt = "";
 
-    if (prompt.startsWith("/config")) return config(prompt.split(" ").slice(1));
+    if (prompt_copy.startsWith("/config")) return config(prompt_copy.split(" ").slice(1));
 
     messages = [...messages, { text: prompt_copy, user: "user", count: messages.length }];
     messages = [...messages, { text: "", user: mapModelShort(activeModel), count: messages.length }];
