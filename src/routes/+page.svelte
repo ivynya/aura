@@ -1,25 +1,36 @@
 <script lang="ts">
   import hljs from "highlight.js";
-	import { send } from "$lib/chat";
 	import Message from "./Message.svelte";
 	import ModelSelect from "./ModelSelect.svelte";
 	import { onMount } from "svelte";
-	import { getModels } from "$lib/model";
 	import MessageInput from "./MessageInput.svelte";
 	import type { ChatMessage } from "$lib/schema";
 	import { state } from "$lib/state";
+	import { send } from "$lib/remote";
 
   let context: any[] | undefined = undefined;
-  let models = ["mistral"];
+  let models = ["mistral:latest", "codellama:instruct"];
   let messages: ChatMessage[] = [];
   let prompt: string = "";
   let activeModel: string;
 
   $: reversed = messages.length > 0 ? messages.toReversed() : [];
 
+  let socket: WebSocket;
+
   onMount(async () => {
-    models = (await getModels()).models.map((m) => m.name);
     activeModel = models[0];
+    
+    socket = new WebSocket('wss://io.ivy.direct/aura');
+    socket.addEventListener("message", async (event) => {
+      const data = JSON.parse(event.data);
+      if (data.action === "response") {
+        messages[messages.length - 1].text += data.data;
+      }
+      if (data.action === "response-end") {
+        hljs.highlightAll();
+      }
+    });
   });
 
   async function submit() {
@@ -29,32 +40,7 @@
     messages = [...messages, { text: "", user: activeModel, count: messages.length }];
     const prompt_copy = prompt;
     prompt = "";
-    const body = await send(activeModel, prompt_copy, context);
-
-    async function readAllChunks(readableStream: ReadableStream|null) {
-      if (!readableStream) return;
-      const reader = readableStream.getReader();
-      let done, value;
-      while (!done) {
-        ({ value, done } = await reader.read());
-        if (done) break;
-        const text = new TextDecoder("utf-8").decode(value);
-        const json = JSON.parse(text);
-        messages[messages.length - 1].text += json.response;
-        if (json.done) {
-          context = json.context;
-          messages[messages.length - 2].done = true;
-          messages[messages.length - 2].duration_total = json.prompt_eval_duration / 1000000;
-          messages[messages.length - 2].tokens = json.prompt_eval_count;
-          messages[messages.length - 1].done = true;
-          messages[messages.length - 1].duration_total = json.eval_duration / 1000000;
-          messages[messages.length - 1].tokens = json.eval_count;
-          hljs.highlightAll();
-        }
-      }
-    }
-
-    await readAllChunks(body);
+    const body = await send(socket, activeModel, prompt_copy, context);
   }
 
   function reset() {
