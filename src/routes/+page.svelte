@@ -4,7 +4,7 @@
 	import MessageInput from "./MessageInput.svelte";
 	import ModelSelect from "./ModelSelect.svelte";
 	import { onMount } from "svelte";
-	import { state } from "$lib/state";
+	import { connected, state } from "$lib/state";
 	import { mapModelShort, send } from "$lib/remote";
 	import type { ChatMessage } from "$lib/schema";
 	import Authenticate from "./Authenticate.svelte";
@@ -38,6 +38,9 @@
     socket = new WebSocket(`wss://${auth}@io.ivy.direct/aura`);
     socket.addEventListener("message", async (event) => {
       const data = JSON.parse(event.data);
+      if (data.action === "join") {
+        $connected = data.data;
+      }
       if (data.action === "response") {
         messages[messages.length - 1].text += data.data;
       }

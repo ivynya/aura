@@ -2,6 +2,7 @@
   import "$lib/app.scss";
 	import { onMount } from "svelte";
   import { stylesheet, initialize, isLight } from "@ivynya/leaf";
+	import StatusHeader from "./StatusHeader.svelte";
 
   onMount(() => {
     initialize();
@@ -12,6 +13,7 @@
   });
 </script>
 
+<StatusHeader />
 <main>
   <slot />
 </main>
@@ -21,6 +23,7 @@
     display: flex;
     flex-direction: column;
     padding: 30px;
+    flex: 1 1;
 
     @media (max-width: 768px) {
       padding: 15px;

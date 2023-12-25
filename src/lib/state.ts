@@ -6,3 +6,4 @@ export interface State {
 }
 
 export const state = writable<State>({});
+export const connected = writable<string>("not connected");
