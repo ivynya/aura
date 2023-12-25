@@ -1,6 +1,7 @@
 <script lang="ts">
   import { marked } from "marked";
   import { fade } from "svelte/transition"; 
+	import { isLight } from "@ivynya/leaf";
 	import type { ChatMessage } from "$lib/schema";
 
   export let message: ChatMessage;
@@ -25,7 +26,7 @@
   {#if message.text.length === 0}
     <div class="loading">parsing context...</div>
   {:else}
-    <div>{@html marked.parse(message.text)}</div>
+    <div class:isLight={$isLight}>{@html marked.parse(message.text)}</div>
   {/if}
 </div>
 
@@ -126,6 +127,12 @@
     padding: 0 0.25rem;
     overflow-x: auto;
     font-family: cartograph-cf, monospace;
+  }
+
+  .msg .isLight :global(pre),
+  .msg .isLight :global(code) {
+    background-color: #2E3440;
+    color: #D8DEE9;
   }
   
   .msg :global(pre) {

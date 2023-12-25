@@ -47,6 +47,9 @@
         hljs.highlightAll();
       }
     });
+    socket.addEventListener("close", async (event) => {
+      connect();
+    });
   }
 
   async function submit() {
