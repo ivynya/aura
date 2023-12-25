@@ -50,7 +50,7 @@
         hljs.highlightAll();
       }
     });
-    socket.addEventListener("close", async (event) => {
+    socket.addEventListener("close", async () => {
       connect();
     });
   }
