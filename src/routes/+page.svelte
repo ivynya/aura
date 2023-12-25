@@ -10,7 +10,7 @@
 	import Authenticate from "./Authenticate.svelte";
   
   let context: any[] | undefined = undefined;
-  let models = ["mist", "mist:q4_k", "mist:q4_0", "code"];
+  let models = ["mist", "mist:q2_k", "mist:q4_0", "code"];
   let messages: ChatMessage[] = [];
   let prompt: string = "";
   let activeModel: string;
@@ -62,7 +62,7 @@
     if (prompt.startsWith("/config")) return config(prompt.split(" ").slice(1));
 
     messages = [...messages, { text: prompt_copy, user: "user", count: messages.length }];
-    messages = [...messages, { text: "", user: activeModel, count: messages.length }];
+    messages = [...messages, { text: "", user: mapModelShort(activeModel), count: messages.length }];
     await send(socket, mapModelShort(activeModel), prompt_copy, context);
   }
 
