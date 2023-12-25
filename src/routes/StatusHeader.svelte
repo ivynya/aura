@@ -4,9 +4,9 @@
 
 <div class="status">
   {#if $connected}
-    <span>aura connected • {$connected} clients</span>
+    <span>illm connected • {$connected} clients</span>
   {:else}
-    <span>aura disconnected</span>
+    <span>illm disconnected</span>
   {/if}
 </div>
 

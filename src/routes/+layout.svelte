@@ -27,6 +27,7 @@
 
     @media (max-width: 768px) {
       padding: 15px;
+      padding-bottom: 30px;
     }
   }
 </style>
