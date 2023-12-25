@@ -19,8 +19,6 @@
       <span class="loading">...</span>
     {/if}
     {#if message.done}
-      <span>{(tokens / duration).toFixed(1)} tk/s</span>
-      <span>{tokens}tk</span>
       <span>{duration.toFixed(1)}s</span>
     {/if}
   </h4>

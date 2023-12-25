@@ -1,15 +1,16 @@
 <script lang="ts">
   import hljs from "highlight.js";
 	import Message from "./Message.svelte";
+	import MessageInput from "./MessageInput.svelte";
 	import ModelSelect from "./ModelSelect.svelte";
 	import { onMount } from "svelte";
-	import MessageInput from "./MessageInput.svelte";
-	import type { ChatMessage } from "$lib/schema";
 	import { state } from "$lib/state";
-	import { send } from "$lib/remote";
-
+	import { mapModelShort, send } from "$lib/remote";
+	import type { ChatMessage } from "$lib/schema";
+	import Authenticate from "./Authenticate.svelte";
+  
   let context: any[] | undefined = undefined;
-  let models = ["mistral:latest", "codellama:instruct"];
+  let models = ["mist", "mist:q4_k", "mist:q4_0", "code"];
   let messages: ChatMessage[] = [];
   let prompt: string = "";
   let activeModel: string;
@@ -20,18 +21,33 @@
 
   onMount(async () => {
     activeModel = models[0];
-    
-    socket = new WebSocket('wss://io.ivy.direct/aura');
+    $state = JSON.parse(window.localStorage.getItem("state") || "{}");
+    state.subscribe((value) => {
+      if (window.localStorage) {
+        window.localStorage.setItem('state', JSON.stringify(value));
+      }
+    });
+
+    if ($state.username && $state.password) {
+      connect();
+    }
+  });
+
+  function connect() {
+    const auth = `${$state.username}:${$state.password}`;
+    socket = new WebSocket(`wss://${auth}@io.ivy.direct/aura`);
     socket.addEventListener("message", async (event) => {
       const data = JSON.parse(event.data);
       if (data.action === "response") {
         messages[messages.length - 1].text += data.data;
       }
       if (data.action === "response-end") {
+        messages[messages.length - 1].done = true;
+        messages[messages.length - 2].done = true;
         hljs.highlightAll();
       }
     });
-  });
+  }
 
   async function submit() {
     if (prompt.startsWith("/config")) return getConfig(prompt.split(" ").slice(1));
@@ -40,7 +56,7 @@
     messages = [...messages, { text: "", user: activeModel, count: messages.length }];
     const prompt_copy = prompt;
     prompt = "";
-    const body = await send(socket, activeModel, prompt_copy, context);
+    await send(socket, mapModelShort(activeModel), prompt_copy, context);
   }
 
   function reset() {
@@ -65,6 +81,9 @@
 
 <ModelSelect options={models} bind:selected={activeModel} />
 <div>
+  {#if !$state.username || !$state.password}
+    <Authenticate />
+  {/if}
   {#each reversed as message (message.count)}
     <Message {message} count={message.count} />
   {/each}

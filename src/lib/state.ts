@@ -1,9 +1,8 @@
 import { writable } from "svelte/store";
 
 export interface State {
-  api: string;
+  username?: string;
+  password?: string;
 }
 
-export const state = writable<State>({
-  api: 'http://localhost:11434',
-});
+export const state = writable<State>({});
