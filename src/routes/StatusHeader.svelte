@@ -3,7 +3,7 @@
 </script>
 
 <div class="status">
-  {#if $connected}
+  {#if $connected !== "not connected"}
     <span>illm connected • {$connected} clients</span>
   {:else}
     <span>illm disconnected</span>
