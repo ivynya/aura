@@ -9,7 +9,7 @@
 	import type { ChatMessage } from "$lib/schema";
 	import Authenticate from "./Authenticate.svelte";
   
-  let context: any[] | undefined = undefined;
+  let context: any[] = [];
   let models = ["mistral", "mistral:q2_k", "codellama", "codellama:13b"];
   let messages: ChatMessage[] = [];
   let prompt: string = "";
@@ -42,12 +42,18 @@
         $connected = data.data;
       }
       if (data.action === "response") {
-        messages[messages.length - 1].text += data.data;
-      }
-      if (data.action === "response-end") {
-        messages[messages.length - 1].done = true;
-        messages[messages.length - 2].done = true;
-        hljs.highlightAll();
+        const json = JSON.parse(data.data);
+        messages[messages.length - 1].text += json.response;
+        if (json.done) {
+          context = json.context;
+          messages[messages.length - 1].done = true;
+          messages[messages.length - 1].duration = json.eval_duration / 1e9;
+          messages[messages.length - 1].tokens = json.eval_count;
+          messages[messages.length - 2].done = true;
+          messages[messages.length - 2].duration = json.prompt_eval_duration / 1e9;
+          messages[messages.length - 2].tokens = json.prompt_eval_count;
+          hljs.highlightAll();
+        }
       }
     });
     socket.addEventListener("close", async () => {
@@ -68,7 +74,7 @@
 
   function reset() {
     messages = [];
-    context = undefined;
+    context = [];
   }
 
   function config(args: string[]) {

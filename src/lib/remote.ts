@@ -4,7 +4,6 @@ export async function send(socket: WebSocket, model: string, prompt: string, con
     "generate": { model, prompt, context },
   }
   socket.send(JSON.stringify(req));
-  console.log('sent', JSON.stringify(req));
 }
 
 export function mapModelShort(model: string): string {

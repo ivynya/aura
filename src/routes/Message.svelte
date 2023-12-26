@@ -6,6 +6,8 @@
 
   export let message: ChatMessage;
   export let count: number;
+
+  $: duration = message.duration?.toFixed(1);
 </script>
 
 <div id="msg-{count}" class="msg" class:user={message.user === "user"} transition:fade={{duration: 200}}>
@@ -18,6 +20,8 @@
     {/if}
     {#if message.done}
       <span>complete</span>
+      <span>{duration}s</span>
+      <span>{message.tokens}tk</span>
     {/if}
   </h4>
   {#if message.text.length === 0}

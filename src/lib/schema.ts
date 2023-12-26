@@ -3,4 +3,6 @@ export interface ChatMessage {
   text: string;
   user: string;
   done?: boolean;
+  duration?: number;
+  tokens?: number;
 }
