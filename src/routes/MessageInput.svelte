@@ -59,7 +59,7 @@
     border: 1px solid var(--background-darker);
     outline: none;
     color: var(--text-primary);
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-family: var(--font-family);
     font-weight: 400;
     line-height: 1.5;

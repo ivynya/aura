@@ -1,10 +1,13 @@
 <script lang="ts">
-	import { connected } from "$lib/state";
+	import { connected_clients, connected_providers } from "$lib/state";
+
+  $: clients_text = $connected_clients === "1" ? "client" : "clients";
+  $: providers_text = $connected_providers === "1" ? "provider" : "providers";
 </script>
 
 <div class="status">
-  {#if $connected !== "not connected"}
-    <span>illm connected • {$connected} clients</span>
+  {#if $connected_clients !== "not connected"}
+    <span>illm connected • {$connected_clients} {clients_text} • {$connected_providers} {providers_text}</span>
   {:else}
     <span>illm disconnected</span>
   {/if}
