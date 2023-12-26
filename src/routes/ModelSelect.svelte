@@ -4,11 +4,12 @@
 	let active = 0;
 
 	let btnWidth = 0;
-	$: leftness = (active * btnWidth);
+	$: ratchet = 100 / options.length;
+	$: leftness = (active * 97);
 </script>
 
 <div class="slider">
-	<span style="transform:translateX({leftness}px);width:{100 / options.length - 0.5}%;" />
+	<span style="transform:translateX({leftness}%);width:{ratchet}%;" />
 	<div class="options">
 		{#each options as o, i}
 			<button

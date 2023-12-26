@@ -20,8 +20,12 @@
     {/if}
     {#if message.done}
       <span>complete</span>
-      <span>{duration}s</span>
-      <span>{message.tokens}tk</span>
+      {#if message.duration}
+        <span>{duration}s</span>
+      {/if}
+      {#if message.tokens}
+        <span>{message.tokens}tk</span>
+      {/if}
     {/if}
   </h4>
   {#if message.text.length === 0}
