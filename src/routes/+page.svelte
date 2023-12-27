@@ -10,7 +10,7 @@
 	import type { ChatMessage } from "$lib/schema";
   
   let context: any[] = [];
-  let models = ["mistral", "m:q2_k", "m:orca", "codellama", "c:13b"];
+  let models = ["mistral", "m:q2_k", "codellama", "c:13b"];
   let messages: ChatMessage[] = [];
   let prompt: string = "";
   let activeModel: string;
