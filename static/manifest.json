@@ -452,8 +452,8 @@
       "sizes": "1024x1024"
     }
   ],
-  "theme_color": "#2B3A52",
-  "background_color": "#2B3A52",
+  "theme_color": "#213147",
+  "background_color": "#213147",
   "display": "fullscreen",
   "orientation": "any",
   "scope": "/aura"

@@ -1,7 +1,7 @@
 <script lang="ts">
   import "$lib/app.scss";
 	import { onMount } from "svelte";
-  import { stylesheet, initialize, isLight } from "@ivynya/leaf";
+  import { stylesheet, initialize, isLight, currentDayPercentage } from "@ivynya/leaf";
 	import StatusHeader from "./StatusHeader.svelte";
 
   onMount(() => {
@@ -13,13 +13,25 @@
   });
 </script>
 
-<StatusHeader />
-<main>
-  <slot />
-</main>
+<div>
+  <StatusHeader />
+  <main>
+    <slot />
+  </main>
+</div>
 
 <style lang="scss">
+  div {
+    background-color: #213147;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
   main {
+    background-color: var(--background);
+    border-top-right-radius: var(--border-radius);
+    border-top-left-radius: var(--border-radius);
     display: flex;
     flex-direction: column;
     padding: 30px;
