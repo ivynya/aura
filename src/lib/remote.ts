@@ -10,6 +10,17 @@ export async function send(socket: WebSocket, model: string, prompt: string, con
   socket.send(JSON.stringify(req));
 }
 
+export async function summarizeYoutube(socket: WebSocket, model: string, videoID: string) {
+  const req = {
+    "action": "summarize-youtube",
+    "data": videoID,
+    "generate": {
+      model
+    }
+  }
+  socket.send(JSON.stringify(req));
+}
+
 export function mapModelShort(model: string): string {
   switch (model) {
     case "mistral":

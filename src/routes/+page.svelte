@@ -6,7 +6,7 @@
 	import ModelSelect from "./ModelSelect.svelte";
 	import { onMount } from "svelte";
 	import { connected_clients, connected_providers, state } from "$lib/state";
-	import { mapModelShort, send } from "$lib/remote";
+	import { mapModelShort, send, summarizeYoutube } from "$lib/remote";
 	import type { ChatMessage } from "$lib/schema";
   
   let context: any[] = [];
@@ -69,6 +69,7 @@
     prompt = "";
 
     if (prompt_copy.startsWith("/config")) return config(prompt_copy.split(" ").slice(1));
+    if (prompt_copy.startsWith("/summarize")) return summarize(prompt_copy.split(" ").slice(1).join(" "));
 
     messages = [...messages, { text: prompt_copy, user: "user", count: messages.length }];
     messages = [...messages, { text: "", user: mapModelShort(activeModel), count: messages.length }];
@@ -92,6 +93,24 @@
     const msg = "AURA Configuration:\n";
     const text = "```\n" + JSON.stringify($state, null, 2) + "\n```";
     messages = [...messages, { text: msg+text, user: "aura", count: messages.length }];
+  }
+
+  async function summarize(video: string) {
+    video = video.trim();
+    video = video.split("?")[0];
+    let videoID = "";
+    if (video.startsWith("https://youtube.com") || video.startsWith("https://www.youtube.com")) {
+      videoID = video.split("v=")[1];
+    } else if (video.startsWith("https://youtu.be")) {
+      videoID = video.split("youtu.be/")[1];
+    } else {
+      messages = [...messages, { text: "Invalid video URL", user: "aura", count: messages.length }];
+      return;
+    }
+
+    messages = [...messages, { text: "/summarize " + video, user: "user", count: messages.length }];
+    messages = [...messages, { text: "", user: mapModelShort(activeModel), count: messages.length }];
+    await summarizeYoutube(socket, mapModelShort(activeModel), videoID)
   }
 </script>
 
