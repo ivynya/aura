@@ -1,6 +1,8 @@
 import { writable } from "svelte/store";
 
 export interface State {
+  protocol?: string;
+  endpoint?: string;
   username?: string;
   password?: string;
   model_temperature?: number;
@@ -9,6 +11,8 @@ export interface State {
 }
 
 export const state = writable<State>({
+  protocol: "wss",
+  endpoint: "",
   username: "",
   password: "",
   model_temperature: 1.0,

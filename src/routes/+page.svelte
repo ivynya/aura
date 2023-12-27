@@ -35,7 +35,8 @@
 
   function connect() {
     const auth = `${$state.username}:${$state.password}`;
-    socket = new WebSocket(`wss://${auth}@io.ivy.direct/aura/client`);
+    const url = `${$state.protocol}://${auth}@${$state.endpoint}`;
+    socket = new WebSocket(url);
     socket.addEventListener("message", async (event) => {
       const data = JSON.parse(event.data);
       if (data.action === "clients") {
