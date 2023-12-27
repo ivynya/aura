@@ -97,11 +97,12 @@
 
   async function summarize(video: string) {
     video = video.trim();
-    video = video.split("?")[0];
     let videoID = "";
     if (video.startsWith("https://youtube.com") || video.startsWith("https://www.youtube.com")) {
       videoID = video.split("v=")[1];
+      if (videoID.includes("&")) videoID = videoID.split("&")[0];
     } else if (video.startsWith("https://youtu.be")) {
+      video = video.split("?")[0];
       videoID = video.split("youtu.be/")[1];
     } else {
       messages = [...messages, { text: "Invalid video URL", user: "aura", count: messages.length }];
