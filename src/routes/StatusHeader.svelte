@@ -20,7 +20,7 @@
     justify-content: center;
     gap: 0.5rem;
     padding: 0.5rem;
-    background-color: #2E3440;
+    background-color: #2B3A52;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
     box-shadow: var(--nm-shadow-sm-primary);
