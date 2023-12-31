@@ -31,6 +31,10 @@
     if ($state.username && $state.password) {
       connect();
     }
+
+    if ($state.models && $state.models.length > 0) {
+      models = $state.models;
+    }
   });
 
   function connect() {
@@ -87,7 +91,12 @@
       state.update((s: any) => {
         if (args.length < 2) return s;
         const [key, value] = args;
-        s[key] = value;
+        if (key === "models") {
+          s[key] = JSON.parse(value);
+          models = s[key];
+        } else {
+          s[key] = value;
+        }
         return s;
       });
     }
