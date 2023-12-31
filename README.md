@@ -29,7 +29,7 @@ These commands may not work well on weaker machines or heavier models and you ma
 
 ## Configuration
 
-Aside from the authentication and endpoint config options described above, you can also configure which models are available as selections in the client. Enter in `/config models ["mistral", "codellama"]` to set the available models to mistral and codellama.
+Aside from the authentication and endpoint config options described above, you can also configure which models are available as selections in the client. Enter in `/config models ["mistral","codellama"]` (no spaces) to set the available models to mistral and codellama.
 
 Again, these models should be pre-pulled and available on your illm provider, and match the tags of the models pulled on your illm provider exactly.
 
