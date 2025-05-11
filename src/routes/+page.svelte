@@ -18,7 +18,7 @@
 	$: reversed = messages.length > 0 ? messages.toReversed() : [];
 
 	onMount(async () => {
-		models = (await getModels()).models.map((m) => m.name);
+		models = (await getModels()).models.map((m: any) => m.name);
 		activeModel = models[0];
 	});
 
@@ -83,7 +83,7 @@
 		<Message {message} count={message.count} />
 	{/each}
 </div>
-<MessageInput bind:input={prompt} on:submit={submit} on:click={reset} />
+<MessageInput bind:input={prompt} {submit} click={reset} />
 
 <style lang="scss">
 	div {
