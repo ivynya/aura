@@ -1,20 +1,24 @@
 <script lang="ts">
-	export let options: string[];
-	export let selected: string;
-	let active = 0;
+	interface Props {
+		options: string[];
+		selected: string;
+	}
 
-	let btnWidth = 0;
-	$: ratchet = 100 / options.length;
-	$: leftness = (active * 97);
+	let { options, selected = $bindable() }: Props = $props();
+	let active = $state(0);
+
+	let btnWidth = $state(0);
+	let ratchet = $derived(100 / options.length);
+	let leftness = ($derived(active * 97));
 </script>
 
 <div class="slider">
-	<span style="transform:translateX({leftness}%);width:{ratchet}%;" />
+	<span style="transform:translateX({leftness}%);width:{ratchet}%;"></span>
 	<div class="options">
 		{#each options as o, i}
 			<button
 				class:active={i === active}
-				on:click={() => {selected = o; active = i}}
+				onclick={() => {selected = o; active = i}}
 				bind:clientWidth={btnWidth}
 				>{o}
 			</button>

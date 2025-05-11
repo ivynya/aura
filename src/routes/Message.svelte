@@ -4,17 +4,21 @@
 	import { isLight } from "@ivynya/leaf";
 	import type { ChatMessage } from "$lib/schema";
 
-  export let message: ChatMessage;
-  export let count: number;
+  interface Props {
+    message: ChatMessage;
+    count: number;
+  }
 
-  $: duration = message.duration?.toFixed(1);
+  let { message, count }: Props = $props();
+
+  let duration = $derived(message.duration?.toFixed(1));
 </script>
 
 <div id="msg-{count}" class="msg" class:user={message.user === "user"} transition:fade={{duration: 200}}>
   <h4>
     <span>{count}</span>
     {message.user}
-    <span class="spacer" />
+    <span class="spacer"></span>
     {#if !message.done}
       <span class="loading">...</span>
     {/if}

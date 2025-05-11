@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { connected_clients, connected_providers } from "$lib/state";
 
-  $: clients_text = $connected_clients === "1" ? "client" : "clients";
-  $: providers_text = $connected_providers === "1" ? "provider" : "providers";
+  let clients_text = $derived($connected_clients === "1" ? "client" : "clients");
+  let providers_text = $derived($connected_providers === "1" ? "provider" : "providers");
 </script>
 
 <div class="status">
