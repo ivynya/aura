@@ -35,8 +35,6 @@
 
 	main {
 		background-color: var(--background);
-		border-top-right-radius: var(--border-radius);
-		border-top-left-radius: var(--border-radius);
 		display: flex;
 		flex-direction: column;
 		padding: 30px;

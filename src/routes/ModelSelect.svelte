@@ -1,104 +1,33 @@
 <script lang="ts">
+	import ModelSelectSlider from './ModelSelectSlider.svelte';
+
 	interface Props {
 		options: string[];
 		selected: string;
 	}
-
 	let { options, selected = $bindable() }: Props = $props();
-	let active = $state(0);
 
-	let btnWidth = $state(0);
-	let ratchet = $derived(100 / options.length);
-	let leftness = ($derived(active * 97));
+	let activeModel = $state(options[0].split(':')[0]);
+	let activeSubopt = $state('');
+	let models = $derived([...new Set(options.map((o) => o.split(':')[0]))]);
+	let subopts = $derived(
+		options.filter((o) => o.includes(activeModel)).map((o) => o.split(':')[1])
+	);
 </script>
 
-<div class="slider">
-	<span style="transform:translateX({leftness}%);width:{ratchet}%;"></span>
-	<div class="options">
-		{#each options as o, i}
-			<button
-				class:active={i === active}
-				onclick={() => {selected = o; active = i}}
-				bind:clientWidth={btnWidth}
-				>{o}
-			</button>
-		{/each}
-	</div>
-</div>
+<section class="model-select">
+	<ModelSelectSlider options={models} bind:selected={activeModel} />
+	<ModelSelectSlider options={subopts} bind:selected={activeSubopt} />
+</section>
 
 <style lang="scss">
-	.slider {
-		background: var(--background);
-		border: 1px solid;
-		border-color:
-			var(--border-primary)
-			var(--border-secondary)
-			var(--border-secondary)
-			var(--border-primary);
-		border-radius: var(--border-radius-sm);
-		box-shadow:
-			var(--nm-shadow-sm-primary) inset,
-			var(--nm-shadow-sm-secondary) inset;
-		transition-duration: 0.5s;
-		height: 20px;
-		padding: 5px;
-		position: relative;
-		z-index: 5;
+	.model-select {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
 
-		span {
-			background: var(--background);
-			border: 1px solid;
-			border-color:
-				var(--border-primary)
-				var(--border-secondary)
-				var(--border-secondary)
-				var(--border-primary);
-			border-radius: var(--border-radius-sm);
-			box-shadow:
-				var(--nm-shadow-sm-primary),
-				var(--nm-shadow-sm-secondary);
-			transition-duration: 0.5s;
-			background-color: var(--background-darker);
-			box-shadow: var(--nm-shadow-sm-secondary);
-			display: block;
-			height: 35px;
-			margin: auto 0;
-
-			position: absolute;
-			top: -30px;
-			bottom: -30px;
-			z-index: -1;
-		}
-
-		.options {
-			display: flex;
-			align-items: center;
-			height: 100%;
-		}
-		.options button {
-			background-color: transparent;
-			border: none;
-			color: var(--text-color);
-			cursor: pointer;
-			display: grid;
-			place-items: center;
-			flex: 1 1;
-
-			padding: auto 0;
-			margin: auto 0;
-			min-height: 100%;
-
-			line-height: 1;
-			font-family: inherit;
-			font-size: 0.6rem;
-			letter-spacing: 1px;
-			text-align: center;
-			text-transform: uppercase;
-			transition-duration: 0.2s;
-
-			&:not(.active) {
-				color: var(--text-muted);
-			}
+		:global(:first-child) {
+			flex: 2 1;
 		}
 	}
 </style>
