@@ -10,8 +10,8 @@
 		<span
 			>illm connected • {$connected_clients}
 			{clients_text} • {$connected_providers}
-			{providers_text}</span
-		>
+			{providers_text}
+		</span>
 	{:else}
 		<span>illm disconnected</span>
 	{/if}

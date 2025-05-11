@@ -1,13 +1,13 @@
 <script lang="ts">
 	import hljs from 'highlight.js';
+	import { onMount } from 'svelte';
 	import { send } from '$lib/chat';
+	import { getModels } from '$lib/model';
+	import { cfg } from '$lib/state';
 	import Message from './Message.svelte';
 	import ModelSelect from './ModelSelect.svelte';
-	import { onMount } from 'svelte';
-	import { getModels } from '$lib/model';
 	import MessageInput from './MessageInput.svelte';
 	import type { ChatMessage } from '$lib/schema';
-	import { cfg } from '$lib/state';
 
 	let context: any[] | undefined = undefined;
 	let models = ['mistral'];
