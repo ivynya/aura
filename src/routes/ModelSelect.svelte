@@ -25,6 +25,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
+		font-family: cartograph-cf, monospace;
 
 		:global(:first-child) {
 			flex: 2 1;

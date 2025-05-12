@@ -2,11 +2,10 @@
 	import '$lib/app.scss';
 	import { onMount } from 'svelte';
 	import { stylesheet, initialize, isLight, currentDayPercentage } from '@ivynya/leaf';
-	import StatusHeader from './StatusHeader.svelte';
+
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
-
 	let { children }: Props = $props();
 
 	onMount(() => {
@@ -19,7 +18,6 @@
 </script>
 
 <div>
-	<StatusHeader />
 	<main>
 		{@render children?.()}
 	</main>

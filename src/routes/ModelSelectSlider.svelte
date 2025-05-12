@@ -40,7 +40,7 @@
 			var(--nm-shadow-sm-secondary) inset;
 		flex: 1 1;
 		transition-duration: 0.5s;
-		height: 20px;
+		height: 18px;
 		padding: 5px 0;
 		position: relative;
 		z-index: 5;
@@ -57,7 +57,7 @@
 			transition-duration: 0.5s;
 			box-shadow: var(--nm-shadow-sm-secondary);
 			display: block;
-			height: 35px;
+			height: 32px;
 			margin: auto 0;
 
 			position: absolute;

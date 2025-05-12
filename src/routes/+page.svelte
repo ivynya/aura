@@ -91,11 +91,11 @@
 		flex-direction: column-reverse;
 		gap: 1rem;
 		flex: 1 1;
-		margin: 2rem 0;
+		margin: 1rem 0;
 		margin-left: -0.45rem;
 		padding: 0.5rem;
 		padding-right: 1rem;
-		max-height: calc(100vh - 140px - 5rem);
+		max-height: calc(100vh - 130px - 5rem);
 		overflow-y: auto;
 	}
 </style>
