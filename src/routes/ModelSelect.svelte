@@ -13,6 +13,10 @@
 	let subopts = $derived(
 		options.filter((o) => o.includes(activeModel)).map((o) => o.split(':')[1])
 	);
+
+	$effect(() => {
+		selected = `${activeModel}:${activeSubopt}`;
+	});
 </script>
 
 <section class="model-select">
