@@ -4,11 +4,12 @@
 	import { send } from '$lib/chat';
 	import { getModels } from '$lib/model';
 	import { cfg } from '$lib/state';
+	import Header from './Header.svelte';
 	import Message from './Message.svelte';
-	import ModelSelect from './ModelSelect.svelte';
 	import MessageInput from './MessageInput.svelte';
 	import type { ChatMessage } from '$lib/schema';
 
+	let sysprompt = '';
 	let context: any[] | undefined = undefined;
 	let models = ['mistral'];
 	let messages: ChatMessage[] = [];
@@ -19,7 +20,6 @@
 
 	onMount(async () => {
 		models = (await getModels()).models.map((m: any) => m.name);
-		activeModel = models[0];
 	});
 
 	async function submit() {
@@ -29,7 +29,7 @@
 		messages = [...messages, { text: '', user: activeModel, count: messages.length }];
 		const prompt_copy = prompt;
 		prompt = '';
-		const body = await send(activeModel, prompt_copy, context);
+		const body = await send(activeModel, sysprompt + prompt_copy, context);
 
 		async function readAllChunks(readableStream: ReadableStream | null) {
 			if (!readableStream) return;
@@ -77,15 +77,26 @@
 	}
 </script>
 
-<ModelSelect options={models} bind:selected={activeModel} />
-<div>
-	{#each reversed as message (message.count)}
-		<Message {message} count={message.count} />
-	{/each}
-</div>
-<MessageInput bind:input={prompt} {submit} click={reset} />
+<Header models={models.slice(0, 16)} bind:selected={activeModel} bind:sysprompt />
+<section>
+	<div>
+		{#each reversed as message (message.count)}
+			<Message {message} count={message.count} />
+		{/each}
+	</div>
+	<MessageInput bind:input={prompt} {submit} click={reset} />
+</section>
 
 <style lang="scss">
+	section {
+		display: flex;
+		flex-direction: column;
+		flex: 1 1;
+		height: 100%;
+		padding: 0.5rem 1.25rem;
+		padding-top: 0.35rem;
+	}
+
 	div {
 		display: flex;
 		flex-direction: column-reverse;
@@ -95,7 +106,7 @@
 		margin-left: -0.45rem;
 		padding: 0.5rem;
 		padding-right: 1rem;
-		max-height: calc(100vh - 130px - 5rem);
+		max-height: calc(100vh - 16rem);
 		overflow-y: auto;
 	}
 </style>

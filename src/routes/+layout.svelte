@@ -35,12 +35,6 @@
 		background-color: var(--background);
 		display: flex;
 		flex-direction: column;
-		padding: 30px;
 		flex: 1 1;
-
-		@media (max-width: 768px) {
-			padding: 15px;
-			padding-bottom: 30px;
-		}
 	}
 </style>

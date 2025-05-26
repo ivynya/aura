@@ -73,7 +73,7 @@
 		box-sizing: border-box;
 		flex: 1 1;
 		height: 100%;
-		border: 1px solid var(--background-darker);
+		border: none;
 		outline: none;
 		color: var(--text-primary);
 		font-size: 0.8rem;
