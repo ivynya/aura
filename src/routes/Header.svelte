@@ -13,7 +13,16 @@
 
 	let activeModel: string = $state('gemma3');
 	let opts = $derived([...new Set(models.map((m) => m.split(':')[0]))]);
-	let subopts = $derived(models.filter((m) => m.includes(activeModel)).map((m) => m.split(':')[1]));
+	let subopts = $derived(
+		models
+			.filter((m) => m.includes(activeModel))
+			.map((m) => m.split(':')[1])
+			.sort((a, b) => {
+				const numeralA = parseInt(/^([0-9]+)./.exec(a)?.[1] || '0');
+				const numeralB = parseInt(/^([0-9]+)./.exec(b)?.[1] || '0');
+				return numeralA > numeralB ? 1 : -1;
+			})
+	);
 	let knobValue = $state(0);
 	let activeSubopt = $derived(subopts[knobValue]);
 	let activeModifier = $state('');
@@ -50,15 +59,14 @@
 			<Slider options={['Default', 'Concise', 'Detailed']} bind:selected={activeModifier} />
 		</div>
 		<Select options={opts} bind:selected={activeModel} />
-		<span>{activeModel} {activeSubopt}</span>
+		<pre>{activeModel}:{activeSubopt}</pre>
 	</div>
-	<!-- <Dropdown options={['Option 1', 'Option 2', 'Option 3']} selected={'Option 1'} /> -->
 
 	<div class="knob-container">
 		<RotaryKnob
 			bind:value={knobValue}
 			min={0}
-			max={Math.max(subopts.length, 5)}
+			max={Math.max(subopts.length - 1, 5)}
 			size={95}
 			arcWidth={6}
 			step={1}

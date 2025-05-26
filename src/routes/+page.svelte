@@ -11,7 +11,7 @@
 
 	let sysprompt = '';
 	let context: any[] | undefined = undefined;
-	let models = ['mistral'];
+	let models = [''];
 	let messages: ChatMessage[] = [];
 	let prompt: string = '';
 	let activeModel: string;
@@ -25,11 +25,12 @@
 	async function submit() {
 		if (prompt.startsWith('/config')) return getConfig(prompt.split(' ').slice(1));
 
+		const messagesHasSystemPromptAlready = messages.length >= 1;
 		messages = [...messages, { text: prompt, user: 'user', count: messages.length }];
 		messages = [...messages, { text: '', user: activeModel, count: messages.length }];
-		const prompt_copy = prompt;
+		const prompt_copy = messagesHasSystemPromptAlready ? prompt : sysprompt + prompt;
 		prompt = '';
-		const body = await send(activeModel, sysprompt + prompt_copy, context);
+		const body = await send(activeModel, prompt_copy, context);
 
 		async function readAllChunks(readableStream: ReadableStream | null) {
 			if (!readableStream) return;
@@ -106,7 +107,7 @@
 		margin-left: -0.45rem;
 		padding: 0.5rem;
 		padding-right: 1rem;
-		max-height: calc(100vh - 16rem);
+		max-height: calc(100vh - 17rem);
 		overflow-y: auto;
 	}
 </style>
