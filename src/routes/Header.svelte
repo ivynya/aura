@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import Select from './Select.svelte';
 	import Slider from './Slider.svelte';
-	import Dropdown from './Dropdown.svelte';
 	import RotaryKnob from './RotaryKnob.svelte'; // Import the new component
 
 	interface Props {

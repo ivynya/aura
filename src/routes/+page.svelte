@@ -77,7 +77,7 @@
 	}
 </script>
 
-<Header models={models.slice(0, 16)} bind:selected={activeModel} bind:sysprompt />
+<Header {models} bind:selected={activeModel} bind:sysprompt />
 <section>
 	<div>
 		{#each reversed as message (message.count)}
