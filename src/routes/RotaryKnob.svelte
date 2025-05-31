@@ -253,7 +253,6 @@
 		class="knob"
 		style:width="{size * 0.7}px"
 		style:height="{size * 0.7}px"
-		style:transform="rotate({currentKnobRotationDegrees}deg)"
 		style:background={knobColor}
 		onmousedown={handleMouseDown}
 		role="slider"
@@ -278,7 +277,11 @@
 			}
 		}}
 	>
-		<div class="knob-indicator" style:background={indicatorColor}></div>
+		<div
+			class="knob-indicator"
+			style:transform="rotate({currentKnobRotationDegrees}deg) translateY(-15px)"
+			style:background={indicatorColor}
+		></div>
 	</div>
 </div>
 
@@ -336,7 +339,7 @@
 		height: 30%;
 		background: var(--indicator-color, var(--text-color));
 		border-radius: 2px;
-		margin-top: 5%;
+		margin: auto;
 		box-shadow: var(--nm-shadow-xs-primary, 1px 1px 2px #b0b0b0, -1px -1px 2px #ffffff);
 	}
 
