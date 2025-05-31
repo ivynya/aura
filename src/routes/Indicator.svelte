@@ -10,12 +10,7 @@
 </script>
 
 <section>
-	<div>
-		<div>
-			<pre class="screen">{model}</pre>
-			<span class="label">Model</span>
-		</div>
-	</div>
+	<span class="label">{model}</span>
 
 	<div class="indicator">
 		{#each options as { label, active } (JSON.stringify(label + active))}
@@ -32,6 +27,7 @@
 		display: flex;
 		gap: 1rem;
 		justify-content: space-between;
+		margin-top: 0.5rem;
 		width: 100%;
 
 		div {
@@ -46,23 +42,6 @@
 				gap: 0.5rem;
 			}
 		}
-	}
-
-	.screen {
-		background-color: #1a1a1a;
-		border: 1px solid;
-		border-color: var(--border-primary) var(--border-secondary);
-		border-radius: var(--border-radius-sm);
-		box-shadow: var(--nm-shadow-sm-primary), var(--nm-shadow-sm-secondary);
-		color: #b9a5b9;
-		padding: 0.15rem 0.5rem;
-		font-size: 0.6rem;
-		font-weight: bold;
-		width: 120px;
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		text-transform: uppercase;
 	}
 
 	.pip {
