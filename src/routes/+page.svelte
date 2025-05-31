@@ -1,22 +1,20 @@
 <script lang="ts">
 	import hljs from 'highlight.js';
 	import { onMount } from 'svelte';
-	import { send } from '$lib/chat';
-	import { getModels } from '$lib/model';
+	import { getModels, send } from '$lib/api';
 	import { cfg } from '$lib/state';
 	import Header from './Header.svelte';
 	import Message from './Message.svelte';
 	import MessageInput from './MessageInput.svelte';
 	import type { ChatMessage } from '$lib/schema';
 
-	let sysprompt = '';
-	let context: any[] | undefined = undefined;
-	let models = [''];
-	let messages: ChatMessage[] = [];
-	let prompt: string = '';
-	let activeModel: string;
+	let models: string[] = $state([]);
+	let sysprompt = $state('');
+	let prompt: string = $state('what is the weather for san francisco, paris, and madrid?');
+	let activeModel: string = $state('');
 
-	$: reversed = messages.length > 0 ? messages.toReversed() : [];
+	let messages: ChatMessage[] = $state([]);
+	let reversed = $derived(messages.length > 0 ? messages.toReversed() : []);
 
 	onMount(async () => {
 		models = (await getModels()).models.map((m: any) => m.name);
@@ -25,42 +23,70 @@
 	async function submit() {
 		if (prompt.startsWith('/config')) return getConfig(prompt.split(' ').slice(1));
 
-		const messagesHasSystemPromptAlready = messages.length >= 1;
-		messages = [...messages, { text: prompt, user: 'user', count: messages.length }];
-		messages = [...messages, { text: '', user: activeModel, count: messages.length }];
-		const prompt_copy = messagesHasSystemPromptAlready ? prompt : sysprompt + prompt;
+		const prompt_copy = prompt;
 		prompt = '';
-		const body = await send(activeModel, prompt_copy, context);
+		messages = [
+			...messages,
+			{ model: activeModel, role: 'user', content: prompt_copy, count: messages.length }
+		];
+		await infer(activeModel);
+	}
 
-		async function readAllChunks(readableStream: ReadableStream | null) {
-			if (!readableStream) return;
-			const reader = readableStream.getReader();
-			let done, value;
-			while (!done) {
-				({ value, done } = await reader.read());
-				if (done) break;
-				const text = new TextDecoder('utf-8').decode(value);
-				const json = JSON.parse(text);
-				messages[messages.length - 1].text += json.response;
-				if (json.done) {
-					context = json.context;
-					messages[messages.length - 2].done = true;
-					messages[messages.length - 2].duration_total = json.prompt_eval_duration / 1000000;
-					messages[messages.length - 2].tokens = json.prompt_eval_count;
-					messages[messages.length - 1].done = true;
-					messages[messages.length - 1].duration_total = json.eval_duration / 1000000;
-					messages[messages.length - 1].tokens = json.eval_count;
-					hljs.highlightAll();
+	async function infer(model: string) {
+		const body = await send(model, messages);
+		if (!body) return;
+		const reader = body.getReader();
+		let done, value;
+		let resend_later = false;
+		while (!done) {
+			({ value, done } = await reader.read());
+			if (done) break;
+			const text = new TextDecoder('utf-8').decode(value);
+			const json = JSON.parse(text);
+			const rmsg = json.message;
+			if (rmsg.content.length > 0 && messages[messages.length - 1].role !== 'assistant') {
+				messages = [
+					...messages,
+					{
+						model: model,
+						role: 'assistant',
+						content: '',
+						count: messages.length
+					}
+				];
+			}
+			messages[messages.length - 1].content += rmsg.content;
+			if (rmsg.tool_calls && rmsg.tool_calls.length > 0) {
+				messages = [
+					...messages,
+					{
+						done: true,
+						model: model,
+						role: 'tool',
+						content: `${Math.random() * 100} degrees`,
+						tool_calls: rmsg.tool_calls,
+						count: messages.length
+					}
+				];
+				resend_later = true;
+			}
+			if (json.done) {
+				messages[messages.length - 2].done = true;
+				messages[messages.length - 2].duration_total = json.prompt_eval_duration / 1000000000;
+				messages[messages.length - 2].tokens = json.prompt_eval_count;
+				messages[messages.length - 1].done = true;
+				messages[messages.length - 1].duration_total = json.eval_duration / 1000000000;
+				messages[messages.length - 1].tokens = json.eval_count;
+				hljs.highlightAll();
+				if (resend_later) {
+					await infer(model);
 				}
 			}
 		}
-
-		await readAllChunks(body);
 	}
 
 	function reset() {
 		messages = [];
-		context = undefined;
 	}
 
 	function getConfig(args: string[]) {
@@ -74,7 +100,10 @@
 		}
 		const msg = 'AURA Configuration:\n';
 		const text = '```\n' + JSON.stringify($cfg, null, 2) + '\n```';
-		messages = [...messages, { text: msg + text, user: 'aura', count: messages.length }];
+		messages = [
+			...messages,
+			{ model: 'aura', content: msg + text, role: 'assistant', count: messages.length }
+		];
 	}
 </script>
 

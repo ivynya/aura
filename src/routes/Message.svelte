@@ -10,37 +10,38 @@
 	}
 
 	let { message, count }: Props = $props();
-
-	let duration = $derived(message.duration?.toFixed(1));
 </script>
 
 <div
 	id="msg-{count}"
 	class="msg"
-	class:user={message.user === 'user'}
+	class:user={message.role === 'user'}
 	transition:fade={{ duration: 200 }}
 >
 	<h4>
 		<span>{count}</span>
-		{message.user}
+		{message.role}
 		<span class="spacer"></span>
 		{#if !message.done}
 			<span class="loading">...</span>
 		{/if}
 		{#if message.done}
 			<span>complete</span>
-			{#if message.duration}
-				<span>{duration}s</span>
+			{#if message.duration_total}
+				<span>{message.duration_total.toFixed(1)}s</span>
 			{/if}
 			{#if message.tokens}
 				<span>{message.tokens}tk</span>
 			{/if}
 		{/if}
 	</h4>
-	{#if message.text.length === 0}
+	{#each message.tool_calls ?? [] as call}
+		<p class="tool-call">{call.function.name} {JSON.stringify(call.function.arguments)}</p>
+	{/each}
+	{#if message.content.length === 0}
 		<div class="loading">parsing context...</div>
 	{:else}
-		<div class:isLight={$isLight}>{@html marked.parse(message.text)}</div>
+		<div class:isLight={$isLight}>{@html marked.parse(message.content)}</div>
 	{/if}
 </div>
 
@@ -102,6 +103,11 @@
 				opacity: 0.5;
 			}
 		}
+	}
+
+	.tool-call {
+		font-style: italic;
+		font-weight: bold;
 	}
 
 	.msg div {
