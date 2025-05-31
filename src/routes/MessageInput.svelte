@@ -3,7 +3,7 @@
 		input: string;
 		images: string[];
 		thumbs: string[];
-		submit: () => void;
+		submit: (e: SubmitEvent) => void;
 		click: () => void;
 	}
 
@@ -56,6 +56,21 @@
 </script>
 
 <svelte:window on:paste={handlePaste} />
+
+<div class="thumbs">
+	{#each thumbs as thumb, i}
+		<button
+			class="thumb"
+			style="transform: rotateZ({Math.random() * i * 5 - 5}deg);"
+			onclick={() => {
+				thumbs = thumbs.filter((t) => t !== thumb);
+				images = images.filter((i) => i !== thumb.split(',')[1]);
+			}}
+		>
+			<img src={thumb} alt="Thumbnail" />
+		</button>
+	{/each}
+</div>
 <div>
 	<button onclick={click}>
 		<svg
@@ -77,21 +92,7 @@
 	<input type="file" accept="image/*" multiple onchange={handleFileChange} hidden />
 	<form onsubmit={submit}>
 		<input type="text" bind:value={input} placeholder="What do you want to ask?" />
-		<span>{images.length}</span>
 	</form>
-</div>
-<div class="thumbs">
-	{#each thumbs as thumb}
-		<button
-			class="thumb"
-			onclick={() => {
-				thumbs = thumbs.filter((t) => t !== thumb);
-				images = images.filter((i) => i !== thumb.split(',')[1]);
-			}}
-		>
-			<img src={thumb} alt="Thumbnail" />
-		</button>
-	{/each}
 </div>
 
 <style lang="scss">
@@ -104,7 +105,7 @@
 
 	button {
 		background-color: var(--background);
-		border: 1px solid var(--background-darker);
+		border: 1px solid var(--border-primary);
 		border-radius: var(--border-radius);
 		box-shadow: var(--nm-shadow-sm-primary), var(--nm-shadow-sm-secondary);
 		box-sizing: border-box;
@@ -157,6 +158,10 @@
 		}
 	}
 
+	.thumbs {
+		margin-bottom: 0.5rem;
+	}
+
 	.thumb {
 		display: grid;
 		place-items: center;
@@ -167,5 +172,6 @@
 	.thumb img {
 		border-radius: var(--border-radius-sm);
 		width: 100%;
+		max-height: 100px;
 	}
 </style>

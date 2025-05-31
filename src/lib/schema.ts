@@ -16,6 +16,16 @@ export interface ChatMessage {
 	tool_calls?: ToolCall[];
 }
 
+export interface Model {
+	name: string;
+	model: string;
+	size: number;
+	details: {
+		parameter_size: string;
+	};
+	capabilities: string[];
+}
+
 export interface Tool {
 	type: 'function';
 	function: {

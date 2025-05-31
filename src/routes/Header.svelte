@@ -3,18 +3,21 @@
 	import Select from './Select.svelte';
 	import Slider from './Slider.svelte';
 	import RotaryKnob from './RotaryKnob.svelte'; // Import the new component
+	import type { Model } from '$lib/schema';
+	import Indicator from './Indicator.svelte';
 
 	interface Props {
-		selected: string;
-		models: string[];
+		active: Model;
+		models: Model[];
 		sysprompt: string;
 	}
-	let { selected = $bindable(), models, sysprompt = $bindable() }: Props = $props();
+	let { active = $bindable(), models, sysprompt = $bindable() }: Props = $props();
+	let modelNames = $derived(models.map((m) => m.name));
 
-	let activeModel: string = $state('gemma3');
-	let opts = $derived([...new Set(models.map((m) => m.split(':')[0]))]);
+	let activeModel: string = $state('');
+	let opts = $derived([...new Set(modelNames.map((m) => m.split(':')[0]))]);
 	let subopts = $derived(
-		models
+		modelNames
 			.filter((m) => m.includes(activeModel))
 			.map((m) => m.split(':')[1])
 			.sort((a, b) => {
@@ -25,10 +28,16 @@
 	);
 	let knobValue = $state(0);
 	let activeSubopt = $derived(subopts[knobValue]);
-	let activeModifier = $state('');
+	let activeModifier = $state('Default');
+
+	let supportsTools = $state(false);
+	let supportsVision = $state(false);
 
 	$effect(() => {
-		selected = `${activeModel}:${activeSubopt}`;
+		active = models.find((m) => m.model === `${activeModel}:${activeSubopt}`) || models[0];
+		if (!active || !active.capabilities) return;
+		supportsTools = active.capabilities.includes('tools');
+		supportsVision = active.capabilities.includes('vision');
 	});
 	$effect(() => {
 		sysprompt = systemPrompts[activeModifier];
@@ -47,46 +56,64 @@
 </script>
 
 <header>
-	<div class="vertical">
-		<div class="block">
-			<h1>
-				<span>AURA</span>
-				{#if hostname === 'localhost'}
-					<span class="tag">DEV</span>
-				{/if}
-			</h1>
-			<span></span>
-			<Slider options={['Default', 'Concise', 'Detailed']} bind:selected={activeModifier} />
+	<div class="horizontal">
+		<div class="vertical">
+			<div class="block">
+				<h1>
+					<span>AURA</span>
+					{#if hostname === 'localhost'}
+						<span class="tag">DEV</span>
+					{/if}
+				</h1>
+				<span></span>
+				<Slider options={['Default', 'Concise', 'Detailed']} bind:selected={activeModifier} />
+			</div>
+			<Select options={opts} bind:selected={activeModel} />
 		</div>
-		<Select options={opts} bind:selected={activeModel} />
-		<pre>{activeModel}:{activeSubopt}</pre>
-	</div>
 
-	<div class="knob-container">
-		<RotaryKnob
-			bind:value={knobValue}
-			min={0}
-			max={Math.max(subopts.length - 1, 5)}
-			size={95}
-			arcWidth={6}
-			step={1}
-		/>
+		<div class="knob-container">
+			<RotaryKnob
+				bind:value={knobValue}
+				min={0}
+				max={subopts.length - 1}
+				size={95}
+				arcWidth={6}
+				step={1}
+			/>
+		</div>
 	</div>
+	<Indicator
+		model={active.name}
+		options={[
+			{ label: 'tools', active: supportsTools },
+			{ label: 'vision', active: supportsVision },
+			{ label: 'ready', active: true }
+		]}
+	/>
 </header>
 
 <style lang="scss">
 	header {
 		display: flex;
+		flex-direction: column;
 		align-items: start;
 		padding: 0.5rem 1.25rem;
 		padding-top: 0.35rem;
-		gap: 1.25rem; // Add some gap for the new component
+		gap: 0.75rem;
 
 		.vertical {
 			display: flex;
 			flex-direction: column;
 			gap: 1rem;
 			flex: 1 1;
+		}
+
+		.horizontal {
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+			flex: 1 1;
+			width: 100%;
 		}
 
 		.block {

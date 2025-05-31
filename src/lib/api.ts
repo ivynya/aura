@@ -1,6 +1,6 @@
 import { get } from 'svelte/store';
 import { cfg } from '$lib/state';
-import type { ChatMessage, Tool } from './schema';
+import type { ChatMessage, Model, Tool } from './schema';
 
 const example_tool: Tool = {
 	type: 'function',
@@ -39,9 +39,25 @@ export async function send(model: string, messages: ChatMessage[]): Promise<Read
 	return res.body;
 }
 
-export async function getModels() {
+export async function getModels(): Promise<Model[]> {
 	const { api } = get(cfg);
 	const models = await fetch(`${api}/api/tags`);
-	const json = await models.json();
+	const json: Model[] = (await models.json()).models as unknown as Model[];
+	if (!models.ok) throw new Error('Failed to fetch models');
+	json.map(async (m) => {
+		m.capabilities = (await getCapabilities(m.name)) || [];
+		return m;
+	});
 	return json;
+}
+
+async function getCapabilities(model: string): Promise<string[]> {
+	const { api } = get(cfg);
+	const res = await fetch(`${api}/api/show`, {
+		body: JSON.stringify({ model: model }),
+		method: 'POST'
+	});
+	if (!res.ok) throw new Error('Failed to fetch capabilities');
+	const json = (await res.json()).capabilities;
+	return json as string[];
 }

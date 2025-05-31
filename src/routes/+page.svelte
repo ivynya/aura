@@ -6,12 +6,20 @@
 	import Header from './Header.svelte';
 	import Message from './Message.svelte';
 	import MessageInput from './MessageInput.svelte';
-	import type { ChatMessage } from '$lib/schema';
+	import type { ChatMessage, Model } from '$lib/schema';
 
-	let models: string[] = $state([]);
+	let models: Model[] = $state([]);
+	let active: Model = $state({
+		name: 'no model',
+		model: 'no model',
+		size: 0,
+		details: {
+			parameter_size: '0'
+		},
+		capabilities: []
+	});
 	let sysprompt = $state('');
-	let prompt: string = $state('what is the weather for san francisco, paris, and madrid?');
-	let activeModel: string = $state('');
+	let prompt: string = $state('');
 	let images: string[] = $state([]);
 	let thumbs: string[] = $state([]);
 
@@ -19,10 +27,11 @@
 	let reversed = $derived(messages.length > 0 ? messages.toReversed() : []);
 
 	onMount(async () => {
-		models = (await getModels()).models.map((m: any) => m.name);
+		models = await getModels();
 	});
 
-	async function submit() {
+	async function submit(e: SubmitEvent) {
+		e.preventDefault();
 		if (prompt.startsWith('/config')) return getConfig(prompt.split(' ').slice(1));
 
 		const prompt_copy = prompt;
@@ -30,7 +39,7 @@
 		messages = [
 			...messages,
 			{
-				model: activeModel,
+				model: active.name,
 				role: 'user',
 				content: prompt_copy,
 				images: images,
@@ -38,7 +47,7 @@
 				count: messages.length
 			}
 		];
-		await infer(activeModel);
+		await infer(active.name);
 	}
 
 	async function infer(model: string) {
@@ -116,7 +125,7 @@
 	}
 </script>
 
-<Header {models} bind:selected={activeModel} bind:sysprompt />
+<Header {models} bind:active bind:sysprompt />
 <section>
 	<div>
 		{#each reversed as message (message.count)}
