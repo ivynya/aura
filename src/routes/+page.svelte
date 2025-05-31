@@ -12,6 +12,8 @@
 	let sysprompt = $state('');
 	let prompt: string = $state('what is the weather for san francisco, paris, and madrid?');
 	let activeModel: string = $state('');
+	let images: string[] = $state([]);
+	let thumbs: string[] = $state([]);
 
 	let messages: ChatMessage[] = $state([]);
 	let reversed = $derived(messages.length > 0 ? messages.toReversed() : []);
@@ -27,7 +29,14 @@
 		prompt = '';
 		messages = [
 			...messages,
-			{ model: activeModel, role: 'user', content: prompt_copy, count: messages.length }
+			{
+				model: activeModel,
+				role: 'user',
+				content: prompt_copy,
+				images: images,
+				thumbs: thumbs,
+				count: messages.length
+			}
 		];
 		await infer(activeModel);
 	}
@@ -114,7 +123,7 @@
 			<Message {message} count={message.count} />
 		{/each}
 	</div>
-	<MessageInput bind:input={prompt} {submit} click={reset} />
+	<MessageInput bind:input={prompt} bind:images bind:thumbs {submit} click={reset} />
 </section>
 
 <style lang="scss">

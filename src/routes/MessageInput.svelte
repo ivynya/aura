@@ -1,13 +1,61 @@
 <script lang="ts">
 	interface Props {
 		input: string;
+		images: string[];
+		thumbs: string[];
 		submit: () => void;
 		click: () => void;
 	}
 
-	let { input = $bindable(), submit, click }: Props = $props();
+	let {
+		input = $bindable(),
+		images = $bindable(),
+		thumbs = $bindable(),
+		submit,
+		click
+	}: Props = $props();
+
+	// Function to handle file input change
+	function handleFileChange(event: Event) {
+		const files = (event.target as HTMLInputElement).files;
+		if (files) {
+			Array.from(files).forEach((file) => {
+				const reader = new FileReader();
+				reader.onload = () => {
+					if (reader.result) {
+						thumbs = [...thumbs, reader.result as string];
+						images = [...images, (reader.result as string).split(',')[1]];
+					}
+				};
+				reader.readAsDataURL(file);
+			});
+		}
+	}
+
+	// Function to handle paste event
+	function handlePaste(event: ClipboardEvent) {
+		const items = event.clipboardData?.items;
+		if (items) {
+			Array.from(items).forEach((item) => {
+				if (item.type.startsWith('image/')) {
+					const file = item.getAsFile();
+					if (file) {
+						const reader = new FileReader();
+						reader.onload = () => {
+							if (reader.result) {
+								thumbs = [...thumbs, reader.result as string];
+								images = [...images, (reader.result as string).split(',')[1]];
+							}
+						};
+						reader.readAsDataURL(file);
+					}
+				}
+			});
+		}
+	}
 </script>
 
+<svelte:window on:paste={handlePaste} />
 <div>
 	<button onclick={click}>
 		<svg
@@ -25,9 +73,25 @@
 			/>
 		</svg>
 	</button>
+	<!-- todo fix this so its visible and usable later -->
+	<input type="file" accept="image/*" multiple onchange={handleFileChange} hidden />
 	<form onsubmit={submit}>
-		<input bind:value={input} placeholder="What do you want to ask?" />
+		<input type="text" bind:value={input} placeholder="What do you want to ask?" />
+		<span>{images.length}</span>
 	</form>
+</div>
+<div class="thumbs">
+	{#each thumbs as thumb}
+		<button
+			class="thumb"
+			onclick={() => {
+				thumbs = thumbs.filter((t) => t !== thumb);
+				images = images.filter((i) => i !== thumb.split(',')[1]);
+			}}
+		>
+			<img src={thumb} alt="Thumbnail" />
+		</button>
+	{/each}
 </div>
 
 <style lang="scss">
@@ -67,31 +131,41 @@
 	form {
 		display: flex;
 		flex: 1 1;
+		flex-direction: column;
+		gap: 0.5rem;
 	}
 
-	input {
+	input[type='text'] {
 		box-sizing: border-box;
 		flex: 1 1;
-		height: 100%;
 		border: none;
 		outline: none;
 		color: var(--text-primary);
 		font-size: 0.8rem;
 		font-family: var(--font-family);
 		font-weight: 400;
-		line-height: 1.5;
-		padding: 1rem;
+		padding: 0.75rem 1rem;
 		background-color: var(--background);
 		border-radius: var(--border-radius);
 		box-shadow:
 			var(--nm-shadow-sm-primary) inset,
 			var(--nm-shadow-sm-secondary) inset;
 		transition-duration: 0.5s;
-		display: block;
-		height: 35px;
 
 		&::placeholder {
 			color: var(--text-muted);
 		}
+	}
+
+	.thumb {
+		display: grid;
+		place-items: center;
+		padding: 0.25rem;
+		height: unset;
+		width: 100px;
+	}
+	.thumb img {
+		border-radius: var(--border-radius-sm);
+		width: 100%;
 	}
 </style>

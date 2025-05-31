@@ -43,6 +43,13 @@
 	{:else}
 		<div class:isLight={$isLight}>{@html marked.parse(message.content)}</div>
 	{/if}
+	{#if message.thumbs}
+		<div class="images">
+			{#each message.thumbs as image}
+				<img src={image} alt="Attachment" />
+			{/each}
+		</div>
+	{/if}
 </div>
 
 <style lang="scss">
@@ -115,6 +122,18 @@
 		flex-direction: column;
 		gap: 0.5rem;
 		line-height: 1.5;
+	}
+
+	.msg .images {
+		flex-direction: row;
+		margin-top: 0.5rem;
+
+		img {
+			border: 1px solid var(--text-muted);
+			border-radius: var(--border-radius-sm);
+			display: block;
+			width: 100px;
+		}
 	}
 
 	.msg :global(a) {

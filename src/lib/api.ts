@@ -29,7 +29,7 @@ export async function send(model: string, messages: ChatMessage[]): Promise<Read
 	const { api } = get(cfg);
 	const res = await fetch(`${api}/api/chat`, {
 		method: 'POST',
-		body: JSON.stringify({ model, messages, tools: [example_tool] })
+		body: JSON.stringify({ model, messages, tools: [] })
 
 		// body: JSON.stringify({ model, messages })
 	});

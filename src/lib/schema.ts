@@ -9,6 +9,8 @@ export interface ChatMessage {
 	model: string;
 	role: 'assistant' | 'user' | 'tool';
 	content: string;
+	images?: string[];
+	thumbs?: string[];
 
 	tools?: Tool[];
 	tool_calls?: ToolCall[];
