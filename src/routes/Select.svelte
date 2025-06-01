@@ -32,7 +32,8 @@
 <div class="select">
 	{#each options.slice(0, 3) as o, i}
 		<button class:active={i === active} onclick={() => (selected = o)}>
-			<span>{o}</span>
+			<span class="pip"></span>
+			<span class="label">{o}</span>
 		</button>
 	{/each}
 
@@ -42,7 +43,8 @@
 		aria-haspopup="listbox"
 		aria-expanded={isOpen}
 	>
-		<span>{active >= 3 ? selected : '[...]'}</span>
+		<span class="pip"></span>
+		<span class="label">{active >= 3 ? selected : '[...]'}</span>
 	</button>
 	{#if isOpen}
 		<ul class="dropdown-menu" role="listbox" transition:fly={{ y: 5, x: 2, duration: 200 }}>
@@ -74,7 +76,7 @@
 		button:first-child {
 			border-top-left-radius: var(--border-radius-sm);
 			border-bottom-left-radius: var(--border-radius-sm);
-			span {
+			.label {
 				border-top-left-radius: var(--border-radius-sm);
 				border-bottom-left-radius: var(--border-radius-sm);
 				border-left: 1px solid var(--border-primary);
@@ -83,7 +85,7 @@
 		button:last-child {
 			border-top-right-radius: var(--border-radius-sm);
 			border-bottom-right-radius: var(--border-radius-sm);
-			span {
+			.label {
 				border-top-right-radius: var(--border-radius-sm);
 				border-bottom-right-radius: var(--border-radius-sm);
 				border-right: 1px solid var(--border-secondary);
@@ -111,7 +113,7 @@
 			transition-duration: 0.2s;
 			position: relative;
 
-			span {
+			.label {
 				background: var(--background);
 				border: 1px solid var(--border-secondary);
 				border-top: 1px solid var(--border-primary);
@@ -124,20 +126,38 @@
 				left: 0;
 				right: 0;
 				bottom: 0;
-				z-index: 10;
+				z-index: 1;
+			}
+
+			.pip {
+				background: radial-gradient(var(--border-primary), var(--border-secondary));
+				box-shadow: var(--nm-shadow-sm-secondary) inset;
+				box-sizing: border-box;
+				display: block;
+				width: 6px;
+				height: 6px;
+				position: absolute;
+				top: 8px;
+				left: 8px;
+				z-index: 2;
+				transition-duration: 0.25s;
 			}
 
 			&.active {
 				box-shadow: none;
 				transform: translateY(1px);
 			}
-			&.active span {
+			&.active .label {
 				background: var(--background);
 				border-right: none;
 				border-left: none;
 				box-shadow:
 					var(--nm-shadow-sm-primary) inset,
 					var(--nm-shadow-sm-secondary) inset;
+			}
+			&.active .pip {
+				background: #e9a559;
+				box-shadow: 0 0 2px var(--border-primary) inset;
 			}
 
 			&:not(.active) {
