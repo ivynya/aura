@@ -86,7 +86,7 @@
 		</div>
 	</div>
 	<Indicator
-		model={active.name}
+		model={active?.name || 'no model'}
 		options={[
 			{ label: 'tools', active: supportsTools },
 			{ label: 'vision', active: supportsVision },
