@@ -145,43 +145,30 @@
 	}
 
 	.dropdown-menu {
-		position: absolute;
-		top: calc(100% + 6px); // Position below the button with a small gap
-		left: 0;
-		width: 100%;
-		background: var(--background);
+		background: var(--background-transparent);
+		background-image: url('/background.png');
+		background-size: 256px;
 		border-radius: var(--border-radius-sm);
 		box-shadow: var(--nm-shadow-sm-primary), var(--nm-shadow-sm-secondary);
+		backdrop-filter: blur(3px);
+		position: absolute;
+		top: calc(100% + 1rem);
+		right: 0;
+		width: 60%;
 		list-style: none;
 		padding: 0.5rem 0;
 		margin: 0;
-		z-index: 1000; // Ensure it's above other content
-		max-height: 220px;
+		z-index: 1;
+		max-height: 200px;
 		overflow-y: auto;
-		border: 1px solid var(--background-darker); // Subtle border for definition
-
-		// Neumorphic scrollbar (Webkit-based browsers)
-		&::-webkit-scrollbar {
-			width: 8px;
-		}
-		&::-webkit-scrollbar-track {
-			background: var(--background);
-			border-radius: var(--border-radius-sm);
-		}
-		&::-webkit-scrollbar-thumb {
-			background: var(--background-darker);
-			border-radius: var(--border-radius-sm);
-			&:hover {
-				background: var(--text-muted, #999); // Use a muted text color or similar for hover
-			}
-		}
 	}
 
 	.dropdown-menu li {
 		padding: 0.75rem 1rem;
-		color: var(--text-color);
+		color: var(--text-muted);
 		cursor: pointer;
-		font-size: 0.85rem;
+		font-size: 0.7rem;
+		text-transform: uppercase;
 		transition:
 			background-color 0.15s ease-out,
 			color 0.15s ease-out;
@@ -190,22 +177,18 @@
 		text-overflow: ellipsis;
 
 		&:hover {
-			background-color: var(--background-darker);
+			backdrop-filter: brightness(0) contrast(1.25) saturate(2) blur(1px);
 		}
 
 		&.selected {
-			font-weight: 600; // Slightly bolder for selected
-			color: var(--text-accent);
+			color: var(--text-color);
 			background-color: var(--background-slight-emphasis);
 		}
 
 		&:focus,
 		&:focus-visible {
-			// Combined for simplicity, focus-visible is preferred
 			outline: none; // Remove default outline
 			background-color: var(--background-darker);
-			// Add a subtle inset ring or border for focus if desired, e.g.:
-			// box-shadow: inset 0 0 0 2px var(--focus-ring-color);
 		}
 	}
 </style>
