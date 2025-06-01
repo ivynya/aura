@@ -34,8 +34,11 @@
 	let supportsVision = $state(false);
 
 	$effect(() => {
-		active = models.find((m) => m.model === `${activeModel}:${activeSubopt}`) || models[0];
-		if (!active || !active.capabilities) return;
+		active =
+			models.find((m) => m.model === `${activeModel}:${activeSubopt}`) ||
+			models.find((m) => m.name.includes(activeModel)) ||
+			models[0];
+		if (!active || !active.capabilities || active.capabilities.length === 0) return;
 		supportsTools = active.capabilities.includes('tools');
 		supportsVision = active.capabilities.includes('vision');
 	});
