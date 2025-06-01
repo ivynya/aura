@@ -29,5 +29,8 @@
 		flex-direction: column;
 		flex: 1 1;
 		height: 100vh;
+		width: 100%;
+		max-width: 700px;
+		margin: auto;
 	}
 </style>
