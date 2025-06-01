@@ -17,24 +17,17 @@
 	});
 </script>
 
-<div>
-	<main>
-		{@render children?.()}
-	</main>
-</div>
+<main>
+	{@render children?.()}
+</main>
 
 <style lang="scss">
-	div {
-		background-color: #213147;
-		display: flex;
-		flex-direction: column;
-		height: 100vh;
-	}
-
 	main {
 		background-color: var(--background);
+		background-size: 264px;
 		display: flex;
 		flex-direction: column;
 		flex: 1 1;
+		height: 100vh;
 	}
 </style>

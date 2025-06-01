@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { fly } from 'svelte/transition';
+
 	interface Props {
 		options: string[];
 		selected: string;
@@ -43,7 +45,7 @@
 		<span>{active >= 3 ? selected : '[...]'}</span>
 	</button>
 	{#if isOpen}
-		<ul class="dropdown-menu" role="listbox">
+		<ul class="dropdown-menu" role="listbox" transition:fly={{ y: 5, x: 2, duration: 200 }}>
 			{#each options.slice(3) as option (option)}
 				<li
 					role="option"
@@ -146,11 +148,11 @@
 
 	.dropdown-menu {
 		background: var(--background-transparent);
-		background-image: url('/background.png');
-		background-size: 256px;
+		background-size: 128px;
 		border-radius: var(--border-radius-sm);
-		box-shadow: var(--nm-shadow-sm-primary), var(--nm-shadow-sm-secondary);
+		box-shadow: var(--nm-shadow-md-primary), var(--nm-shadow-md-secondary);
 		backdrop-filter: blur(3px);
+		background-blend-mode: revert;
 		position: absolute;
 		top: calc(100% + 1rem);
 		right: 0;
@@ -177,12 +179,11 @@
 		text-overflow: ellipsis;
 
 		&:hover {
-			backdrop-filter: brightness(0) contrast(1.25) saturate(2) blur(1px);
+			background-color: var(--background-darker);
 		}
 
 		&.selected {
 			color: var(--text-color);
-			background-color: var(--background-slight-emphasis);
 		}
 
 		&:focus,
